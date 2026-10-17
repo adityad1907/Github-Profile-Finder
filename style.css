@@ -1,0 +1,888 @@
+:root {
+    --rgb-highlight: 74, 239, 152;
+    --rgb-background: 0, 9, 0;
+    --rgb-text: 74, 239, 152;
+    --rgb-close-button: 212, 18, 39;
+    --rgb-online-color: 57, 255, 20;
+    --rgb-afk-color: 255, 255, 51;
+    --rgb-dnd-color: 255, 0, 0;
+    --rgb-streaming-color: 188, 19, 254;
+
+    --transition-time: 0.3s;
+    --custom-title-text: "GITHUB PROFILE FINDER";
+    --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Share Tech Mono', monospace;
+    --font-terminal: 'Share Tech Mono', 'JetBrains Mono', 'Courier New', monospace;
+
+    --terminal-green: rgb(var(--rgb-highlight));
+    --terminal-dim: rgba(var(--rgb-highlight), 0.7);
+    --terminal-faint: rgba(var(--rgb-highlight), 0.15);
+    --terminal-glow: 0 0 8px rgba(var(--rgb-highlight), 0.75), 0 0 16px rgba(var(--rgb-highlight), 0.35);
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+    --radius-full: 9999px;
+    --transition: all var(--transition-time) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    font-family: var(--font-terminal);
+    background-color: rgb(var(--rgb-background));
+    color: var(--terminal-green);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.crt-overlay {
+    content: " ";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background:
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.32) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.04));
+    z-index: 9999;
+    background-size: 100% 3px, 6px 100%;
+    pointer-events: none;
+    box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.85);
+    animation: crtFlicker 0.15s infinite;
+}
+
+#root {
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+}
+
+.terminal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid rgba(var(--rgb-highlight), 0.4);
+    padding-bottom: 0.9rem;
+    margin-bottom: 0.5rem;
+    gap: 1rem;
+}
+
+.terminal-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.robco-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--terminal-green);
+    text-shadow: var(--terminal-glow);
+    text-transform: uppercase;
+}
+
+.terminal-subtitle {
+    font-size: 0.85rem;
+    color: var(--terminal-dim);
+    letter-spacing: 0.05em;
+}
+
+.theme-toggle-btn {
+    font-family: var(--font-terminal);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--terminal-green);
+    background: rgba(var(--rgb-highlight), 0.08);
+    border: 1px solid rgba(var(--rgb-highlight), 0.5);
+    padding: 0.35rem 0.75rem;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.theme-toggle-btn:hover {
+    background: var(--terminal-green);
+    color: rgb(var(--rgb-background));
+    box-shadow: var(--terminal-glow);
+}
+
+.github-profile-container {
+    width: 100%;
+    background: rgba(0, 14, 2, 0.94);
+    border: 2px solid rgba(var(--rgb-highlight), 0.65);
+    border-radius: var(--radius-sm);
+    padding: 2rem;
+    box-shadow:
+        0 0 25px rgba(var(--rgb-highlight), 0.2),
+        inset 0 0 30px rgba(var(--rgb-highlight), 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    position: relative;
+    overflow: hidden;
+    animation: terminalBoot 0.4s ease-out;
+}
+
+.github-profile-container::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    height: 2px;
+    background: rgba(var(--rgb-highlight), 0.4);
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    position: relative;
+}
+
+.input-prefix {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--terminal-green);
+    text-shadow: var(--terminal-glow);
+    user-select: none;
+}
+
+.input-wrapper input {
+    flex: 1;
+    font-family: var(--font-terminal);
+    font-size: 1.05rem;
+    color: var(--terminal-green);
+    background: rgba(0, 20, 5, 0.85);
+    border: 1px solid rgba(var(--rgb-highlight), 0.55);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+    outline: none;
+    letter-spacing: 0.05em;
+    transition: var(--transition);
+    text-shadow: 0 0 4px rgba(var(--rgb-highlight), 0.5);
+}
+
+.input-wrapper input::placeholder {
+    color: rgba(var(--rgb-highlight), 0.4);
+    font-family: var(--font-terminal);
+    letter-spacing: 0.03em;
+}
+
+.input-wrapper input:focus {
+    border-color: var(--terminal-green);
+    background: rgba(0, 30, 8, 0.95);
+    box-shadow: 0 0 12px rgba(var(--rgb-highlight), 0.45);
+}
+
+.input-wrapper button {
+    font-family: var(--font-terminal);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--terminal-green);
+    background: rgba(var(--rgb-highlight), 0.12);
+    border: 1px solid var(--terminal-green);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(var(--rgb-highlight), 0.2);
+    transition: var(--transition);
+    white-space: nowrap;
+    text-transform: uppercase;
+}
+
+.input-wrapper button:hover {
+    background: var(--terminal-green);
+    color: rgb(var(--rgb-background));
+    box-shadow: var(--terminal-glow);
+    transform: translateY(-1px);
+}
+
+.input-wrapper button:active {
+    transform: translateY(0);
+}
+
+h1 {
+    font-family: var(--font-terminal);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--terminal-green);
+    text-shadow: var(--terminal-glow);
+    text-align: center;
+    padding: 2.5rem 1rem;
+    letter-spacing: 0.08em;
+    animation: terminalBlink 1.4s infinite ease-in-out;
+    text-transform: uppercase;
+}
+
+.user {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-top: 0.5rem;
+    animation: terminalFade 0.3s ease-out;
+}
+
+.user-header,
+.user>div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.user .avatar,
+.user img {
+    width: 108px;
+    height: 108px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--terminal-green);
+    box-shadow: var(--terminal-glow);
+    object-fit: cover;
+    background: rgba(0, 20, 5, 0.9);
+    filter: brightness(0.95) contrast(1.15) drop-shadow(0 0 6px rgba(var(--rgb-highlight), 0.5));
+    transition: var(--transition);
+}
+
+.user .avatar:hover,
+.user img:hover {
+    filter: none;
+    border-color: #ffffff;
+    box-shadow: 0 0 20px rgba(var(--rgb-highlight), 0.8);
+}
+
+.name-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.name-container a {
+    color: var(--terminal-green);
+    text-decoration: none;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-shadow: var(--terminal-glow);
+    transition: var(--transition);
+}
+
+.name-container a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+    text-shadow: 0 0 12px #ffffff;
+}
+
+.name-container p,
+.user-joined {
+    color: var(--terminal-dim);
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+}
+
+.user-bio,
+.user>p {
+    color: var(--terminal-green);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    background: rgba(var(--rgb-highlight), 0.06);
+    border: 1px dashed rgba(var(--rgb-highlight), 0.45);
+    border-left: 3px solid var(--terminal-green);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem 1.15rem;
+    letter-spacing: 0.03em;
+    text-shadow: 0 0 4px rgba(var(--rgb-highlight), 0.35);
+}
+
+.profile-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 0.25rem;
+}
+
+.profile-info>div,
+.stat-box {
+    background: rgba(var(--rgb-highlight), 0.05);
+    border: 1px solid rgba(var(--rgb-highlight), 0.4);
+    border-radius: var(--radius-sm);
+    padding: 0.9rem 0.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    transition: var(--transition);
+}
+
+.profile-info>div:hover,
+.stat-box:hover {
+    background: rgba(var(--rgb-highlight), 0.15);
+    border-color: var(--terminal-green);
+    box-shadow: 0 0 15px rgba(var(--rgb-highlight), 0.35);
+    transform: translateY(-2px);
+}
+
+.profile-info p:first-child,
+.stat-title {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--terminal-dim);
+}
+
+.profile-info p:last-child,
+.stat-value {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--terminal-green);
+    text-shadow: var(--terminal-glow);
+}
+
+.user-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.85rem;
+    margin-top: 0.25rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed rgba(var(--rgb-highlight), 0.25);
+    font-size: 0.9rem;
+    color: var(--terminal-dim);
+}
+
+.user-details a {
+    color: var(--terminal-green);
+    text-decoration: underline;
+    word-break: break-all;
+    text-shadow: 0 0 4px rgba(var(--rgb-highlight), 0.4);
+}
+
+.user-details a:hover {
+    color: #ffffff;
+    text-shadow: 0 0 10px var(--terminal-green);
+}
+
+/* Attached Platforms / Comm Frequencies (Fallout CRT Theme) */
+.attached-platforms-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+    padding: 0.85rem 1rem;
+    background: rgba(var(--rgb-highlight), 0.04);
+    border: 1px dashed rgba(var(--rgb-highlight), 0.35);
+    border-radius: var(--radius-sm);
+    position: relative;
+}
+
+.platforms-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--terminal-dim);
+    text-shadow: 0 0 3px rgba(var(--rgb-highlight), 0.4);
+    padding-bottom: 0.25rem;
+}
+
+.platforms-title {
+    color: var(--terminal-dim);
+    letter-spacing: 0.06em;
+}
+
+.platforms-count {
+    color: var(--terminal-green);
+    text-shadow: var(--terminal-glow);
+    font-size: 0.8rem;
+}
+
+.platforms-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    align-items: center;
+}
+
+.platform-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.85rem;
+    background: rgba(var(--rgb-highlight), 0.08);
+    border: 1px solid rgba(var(--rgb-highlight), 0.55);
+    border-radius: var(--radius-sm);
+    color: var(--terminal-green);
+    text-decoration: none;
+    font-family: var(--font-terminal);
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    box-shadow: 0 0 6px rgba(var(--rgb-highlight), 0.15);
+    transition: var(--transition);
+}
+
+.platform-badge:hover {
+    background: var(--terminal-green);
+    color: rgb(var(--rgb-background));
+    box-shadow: var(--terminal-glow);
+    transform: translateY(-2px);
+    border-color: #ffffff;
+}
+
+.platform-icon {
+    display: inline-block;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.platform-badge:hover .platform-icon {
+    transform: scale(1.15);
+}
+
+.platform-name {
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.platform-handle {
+    font-size: 0.8rem;
+    opacity: 0.85;
+    max-width: 170px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.platform-badge:hover .platform-handle {
+    opacity: 1;
+    color: rgb(var(--rgb-background));
+}
+
+.platform-arrow {
+    font-size: 0.85rem;
+    opacity: 0.65;
+    margin-left: 0.1rem;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.platform-badge:hover .platform-arrow {
+    transform: translate(2px, -2px);
+    opacity: 1;
+}
+
+.error-message {
+    text-align: center;
+    color: rgb(var(--rgb-close-button));
+    background: rgba(var(--rgb-close-button), 0.1);
+    border: 1px solid rgba(var(--rgb-close-button), 0.5);
+    border-radius: var(--radius-sm);
+    padding: 1.25rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    animation: terminalFade 0.3s ease-out;
+    text-shadow: 0 0 6px rgba(var(--rgb-close-button), 0.6);
+}
+
+.github-profile-container.modern-theme {
+    font-family: var(--font-sans);
+    background: rgba(17, 24, 39, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    color: #f8fafc;
+}
+
+.github-profile-container.modern-theme::before {
+    background: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%);
+    height: 3px;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.github-profile-container.modern-theme .robco-title {
+    color: #38bdf8;
+    text-shadow: none;
+    font-family: var(--font-sans);
+}
+
+.github-profile-container.modern-theme .terminal-subtitle {
+    color: #94a3b8;
+    font-family: var(--font-sans);
+}
+
+.github-profile-container.modern-theme .theme-toggle-btn {
+    font-family: var(--font-sans);
+    color: #f8fafc;
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+}
+
+.github-profile-container.modern-theme .theme-toggle-btn:hover {
+    background: #38bdf8;
+    color: #0b0f19;
+    box-shadow: none;
+}
+
+.github-profile-container.modern-theme .input-wrapper input {
+    font-family: var(--font-sans);
+    color: #f8fafc;
+    background: rgba(15, 23, 42, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    text-shadow: none;
+}
+
+.github-profile-container.modern-theme .input-wrapper input:focus {
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+}
+
+.github-profile-container.modern-theme .input-wrapper button {
+    font-family: var(--font-sans);
+    color: #ffffff;
+    background: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%);
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3);
+    text-shadow: none;
+}
+
+.github-profile-container.modern-theme .input-wrapper button:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.45);
+    color: #ffffff;
+}
+
+.github-profile-container.modern-theme .user .avatar {
+    filter: none;
+    border-radius: 9999px;
+    border: 3px solid rgba(56, 189, 248, 0.4);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
+}
+
+.github-profile-container.modern-theme .name-container a {
+    color: #f8fafc;
+    text-shadow: none;
+    font-family: var(--font-sans);
+}
+
+.github-profile-container.modern-theme .name-container a:hover {
+    color: #38bdf8;
+    text-shadow: none;
+}
+
+.github-profile-container.modern-theme .user-bio {
+    background: rgba(15, 23, 42, 0.4);
+    border: none;
+    border-left: 3px solid #06b6d4;
+    border-radius: 8px;
+    color: #94a3b8;
+    text-shadow: none;
+    font-family: var(--font-sans);
+}
+
+.github-profile-container.modern-theme .profile-info>div {
+    background: rgba(15, 23, 42, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    box-shadow: none;
+}
+
+.github-profile-container.modern-theme .profile-info p:last-child {
+    color: #38bdf8;
+    text-shadow: none;
+    font-family: var(--font-mono);
+}
+
+.github-profile-container.modern-theme .attached-platforms-container {
+    background: rgba(15, 23, 42, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 1rem 1.15rem;
+    backdrop-filter: blur(8px);
+}
+
+.github-profile-container.modern-theme .platforms-heading {
+    font-family: var(--font-sans);
+    color: #94a3b8;
+    text-shadow: none;
+    font-size: 0.88rem;
+    letter-spacing: normal;
+    text-transform: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.github-profile-container.modern-theme .platforms-title {
+    color: #cbd5e1;
+    font-weight: 600;
+}
+
+.github-profile-container.modern-theme .platforms-count {
+    background: rgba(56, 189, 248, 0.12);
+    color: #38bdf8;
+    padding: 0.15rem 0.55rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    text-shadow: none;
+}
+
+.github-profile-container.modern-theme .platform-badge {
+    background: rgba(30, 41, 59, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: #e2e8f0;
+    font-family: var(--font-sans);
+    padding: 0.5rem 0.9rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    text-shadow: none;
+}
+
+.github-profile-container.modern-theme .platform-name {
+    font-weight: 600;
+    text-transform: none;
+    color: #f8fafc;
+}
+
+.github-profile-container.modern-theme .platform-handle {
+    color: #94a3b8;
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+}
+
+.github-profile-container.modern-theme .platform-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+.github-profile-container.modern-theme .platform-badge:hover .platform-handle {
+    color: #cbd5e1;
+}
+
+.github-profile-container.modern-theme .platform-badge.platform-linkedin {
+    border-color: rgba(10, 102, 194, 0.4);
+}
+
+.github-profile-container.modern-theme .platform-badge.platform-linkedin .platform-icon {
+    color: #0a66c2;
+}
+
+.github-profile-container.modern-theme .platform-badge.platform-linkedin:hover {
+    background: rgba(10, 102, 194, 0.2);
+    border-color: #0a66c2;
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(10, 102, 194, 0.35);
+}
+
+.github-profile-container.modern-theme .platform-badge.platform-linkedin:hover .platform-icon {
+    color: #38bdf8;
+}
+
+.github-profile-container.modern-theme .platform-badge.platform-x,
+.github-profile-container.modern-theme .platform-badge.platform-twitter {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.github-profile-container.modern-theme .platform-badge.platform-x .platform-icon,
+.github-profile-container.modern-theme .platform-badge.platform-twitter .platform-icon {
+    color: #f8fafc;
+}
+
+.github-profile-container.modern-theme .platform-badge.platform-x:hover,
+.github-profile-container.modern-theme .platform-badge.platform-twitter:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: #ffffff;
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.2);
+}
+
+.github-profile-container.modern-theme .platform-badge.platform-youtube:hover {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: #ef4444;
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.35);
+}
+
+.github-profile-container.modern-theme .platform-badge.platform-bluesky:hover {
+    background: rgba(17, 133, 254, 0.18);
+    border-color: #38bdf8;
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(56, 189, 248, 0.35);
+}
+
+.github-profile-container.modern-theme .platform-badge.platform-mastodon:hover {
+    background: rgba(99, 100, 255, 0.18);
+    border-color: #818cf8;
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(129, 140, 248, 0.35);
+}
+
+.github-profile-container.modern-theme .platform-badge.platform-instagram:hover {
+    background: rgba(225, 48, 108, 0.18);
+    border-color: #f43f5e;
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(244, 63, 94, 0.35);
+}
+
+.github-profile-container.modern-theme .user-details {
+    font-family: var(--font-sans);
+    border-top-color: rgba(255, 255, 255, 0.08);
+    border-top-style: solid;
+    color: #94a3b8;
+}
+
+.github-profile-container.modern-theme .user-details a {
+    color: #38bdf8;
+    text-shadow: none;
+}
+
+.github-profile-container.modern-theme .user-details a:hover {
+    color: #67e8f9;
+    text-shadow: none;
+}
+
+@keyframes terminalBoot {
+    0% {
+        opacity: 0;
+        transform: scale(0.97);
+        filter: brightness(3);
+    }
+
+    50% {
+        opacity: 0.8;
+        filter: brightness(1.5);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: brightness(1);
+    }
+}
+
+@keyframes terminalFade {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes terminalBlink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.35;
+    }
+}
+
+@keyframes crtFlicker {
+    0% {
+        opacity: 0.99;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    52% {
+        opacity: 0.96;
+    }
+
+    54% {
+        opacity: 1;
+    }
+
+    85% {
+        opacity: 0.98;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 580px) {
+    body {
+        padding: 1rem 0.5rem;
+    }
+
+    .github-profile-container {
+        padding: 1.25rem 1rem;
+        gap: 1.25rem;
+    }
+
+    .terminal-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .input-wrapper {
+        flex-direction: column;
+    }
+
+    .input-wrapper input,
+    .input-wrapper button {
+        width: 100%;
+    }
+
+    .user-header,
+    .user>div:first-child {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-info {
+        grid-template-columns: 1fr;
+    }
+
+    .platforms-grid {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .platform-badge {
+        justify-content: space-between;
+    }
+}
